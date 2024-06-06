@@ -3,11 +3,7 @@ from email.message import EmailMessage
 import ssl
 import os
 
-# SMTP_OBJECT = smtplib.SMTP(local_hostname="localhost")
 
-# Configuration
-# PORT = 587
-# SMTP_SERVER = "live.smtp.mailtrap.io"
 SENDER_EMAIL = os.environ.get("SENDER_EMAIL")  # Sender email account 
 PASSWORD = os.environ.get("EMAIL_PASSWORD")  # Sender remote password
 RECEIVER_EMAIL = os.environ.get("RECEIVER_EMAIL") # Email you want to receive Pdfs

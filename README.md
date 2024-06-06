@@ -11,7 +11,7 @@ Creating a recipe in the database based on this information
 Generating pdf files based on either recipes or the shopping list function 
 and emailing these pdf's to a specified email
 
-The files used to create  this includes a csv file containing a set of training data, the 
+The files used to create  this includes a csv file containing a set of training data, a program that would allow the user to classify the data and the set trainer
 
 # Installation
 
@@ -29,11 +29,11 @@ RECEIVER_EMAIL
 The first 4 of these are for the database, and will require a postgres database like the front end
 the next 3 will be required to send pdf emails
 To setup the sender email with a gmail account try this video: 
-[https://www.youtube.com/watch?v=g_j6ILT-X0k]
+[Setup Gmail account for use with the e-mail server](https://www.youtube.com/watch?v=g_j6ILT-X0k)
 
 # Run
 ```bash
 flask --app board/__init__ run
 ```
 
-make sure the server is running on on [http://127.0.0.1:5000]
+make sure the server is running on on [the local server](http://127.0.0.1:5000)

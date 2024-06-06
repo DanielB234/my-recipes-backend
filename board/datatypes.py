@@ -42,6 +42,8 @@ class Instruction(Datatype):
         self.list_reference = list_reference
         self.recipe_id = recipe_id
 
+# List references bind together sets of instructions or ingredients, 
+# as recipes may have several of each
 class Reference(Datatype):
     def __init__(self, word_coefficient, name, position, recipe_id):
         Datatype.__init__(self)

@@ -12,7 +12,6 @@ warnings.filterwarnings('ignore')
 
 df = pd.read_csv('instructions_training.csv', encoding='latin1')
 
-# Downsampling to balance the dataset
 instruction_msg = df[df.isInstruction == 1]
 not_instruction_msg = df[df.isInstruction == 0]
 not_instruction_msg = not_instruction_msg.sample(n=len(instruction_msg),
@@ -25,7 +24,7 @@ def remove_punctuations(text):
     temp = str.maketrans('', '', punctuations_list)
     return text.translate(temp)
 
-
+# Stopwords are commonly used words like 'the' and 'it' which add no relevant information
 def remove_stopwords(text):
     stop_words = stopwords.words('english')
  
@@ -42,30 +41,25 @@ def remove_stopwords(text):
  
     return output
 
-def get_word_average(data):
-    word_count = []
-    for x in data['listElement']:
-        word_count.append(get_word_count(x))
-    print(word_count)
-    test_list = word_count
-    mean = sum(test_list) / len(test_list) 
-    variance = sum([((x - mean) ** 2) for x in test_list]) / len(test_list) 
-    res = variance ** 0.5
-    print(mean)
-    print(res)
-    return mean - res
+# def get_word_average(data):
+#     word_count = []
+#     for x in data['listElement']:
+#         word_count.append(get_word_count(x))
+#     test_list = word_count
+#     mean = sum(test_list) / len(test_list) 
+#     variance = sum([((x - mean) ** 2) for x in test_list]) / len(test_list) 
+#     res = variance ** 0.5
+#     return mean - res
 
 balanced_data['listElement'] = balanced_data['listElement'].astype(str).apply(lambda x: x.lower())
 balanced_data['listElement'] = balanced_data['listElement'].apply(lambda x: remove_punctuations(x))
-get_word_average(balanced_data[balanced_data['isInstruction'] == 0])
-get_word_average(balanced_data[balanced_data['isInstruction'] == 1])
+# get_word_average(balanced_data[balanced_data['isInstruction'] == 0])
+# get_word_average(balanced_data[balanced_data['isInstruction'] == 1])
 
 balanced_data['listElement'] = balanced_data['listElement'].apply(lambda text: remove_stopwords(text))
-#df['listElement'] = df['listElement'].apply(preprocess_text)
-print(balanced_data)
+
 
 def count_words(data,type):
-    #dist = get_word_average(data)
     word_count = []
     count = 0
     for x in data['listElement']:
@@ -74,8 +68,6 @@ def count_words(data,type):
             count += 1
     email_corpus = " ".join(data['listElement'])
     words = re.findall(r'\w+', email_corpus)
-    print(Counter(words).most_common(50))
-    print(count)
     return Counter(words).most_common(300)
 
 instruction_words = count_words(balanced_data[balanced_data['isInstruction'] == 1], type='instruction')
@@ -91,7 +83,6 @@ for x in instruction_words:
         if word == x[0]:
             count += 1
     new_count.append((x[0],x[1]/(count+1)))
-print(new_count)
 
 sorted_by_second = sorted(new_count, key=lambda tup: tup[1])
 print(sorted_by_second)

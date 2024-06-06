@@ -27,7 +27,7 @@ def create_pdf(recipe_id):
     flowables = []
     sample_style_sheet = getSampleStyleSheet()
     custom_style = sample_style_sheet['BodyText']
-    custom_style.fontSize = 18
+    custom_style.fontSize = 15
     title_style = sample_style_sheet['Heading1']
     title_style.fontSize = 28
     title_style2 = sample_style_sheet['Heading2']

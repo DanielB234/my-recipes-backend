@@ -1,6 +1,7 @@
 import psycopg2
 import os
 
+# Connect to the database with our .env variables
 def connect():
     conn = psycopg2.connect(database=os.environ.get("DATABASE"), 
                             user=os.environ.get("USER"),
@@ -9,9 +10,6 @@ def connect():
     cur = conn.cursor()
     return conn, cur
 
-def get_permutations(cur):
-    cur.execute('''SELECT name FROM measurement_perms''')
-    return cur.fetchall() 
 
 def get_recipes(cur, recipe_id):
     cur.execute('''SELECT name, modifier FROM recipes WHERE id = %s;''',(recipe_id,))
@@ -39,14 +37,6 @@ def get_ingredients_by_name(cur, recipe_id, name):
       INNER JOIN recipes on ingredients.recipe_id = recipes.id
       WHERE ingredients.recipe_id = %s and ingredients.list_reference = %s''',
       (recipe_id,name))
-    return cur.fetchall() 
-
-def get_shopping_list(cur):
-    cur.execute('''SELECT 
-        ingredients.name
-      FROM ingredients
-      WHERE ingredients.shopping_list = true''',
-      )
     return cur.fetchall() 
 
 def get_ingredients(cur, recipe_id):
@@ -85,6 +75,21 @@ def get_instructions(cur, recipe_id):
       (recipe_id,))
     return cur.fetchall() 
 
+
+# For creating a PDF from our shopping list
+def get_shopping_list(cur):
+    cur.execute('''SELECT 
+        ingredients.name
+      FROM ingredients
+      WHERE ingredients.shopping_list = true''',
+      )
+    return cur.fetchall() 
+
+# These functions are responsible for creating a recipe from a given URL
+def get_permutations(cur):
+    cur.execute('''SELECT name FROM measurement_perms''')
+    return cur.fetchall() 
+
 def create_recipe(cur, recipe):
     cur.execute('''INSERT INTO recipes 
         (id, name, serving, serving_amount, serving_units, preparation_time, cook_time, date, todo_list, image_url)
@@ -107,7 +112,8 @@ def create_reference(cur,reference):
     cur.execute('''INSERT INTO list_references (id, name, word_coefficient, position, recipe_id)
             VALUES (%s, %s, %s, %s, %s)
             ON CONFLICT (id) DO NOTHING;''',(reference.id,reference.name, reference.word_coefficient, reference.position,reference.recipe_id))
-                  
+
+# These procedures are responsible for updating the ingredients from the front end       
 def update_ingredient(cur,id,ingredients,modifier):
     amount = ingredients[0]/modifier if ingredients[0] != None else None
     amount_upper = ingredients[1]/modifier if ingredients[1] != None else None
